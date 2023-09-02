@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails des véhicules</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <a href="liste_groupe.html">Retour</a>
+    <span id="titre"></span>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Plaque</th>
+                <th>date</th>
+            </tr>
+        </thead>
+        <tbody id="listeVehicules"></tbody>
+    </table>
+    <script>
+        // Récupérez la date et l'heure depuis l'URL
+        var urlSearchParams = new URLSearchParams(window.location.search);
+        var date = urlSearchParams.get("date");
+        var heure = urlSearchParams.get("heure");
+
+        $.ajax({
+            type: "GET", // Utilisez GET pour obtenir les données du serveur
+            url: "../back/details_vehicules.php",
+            dataType: "json",
+            data: {
+                date: date,
+                heure: heure
+            },
+            success: function(data) {
+                var head = "<h2>Liste des véhicules pour le " + date + " à " + heure + " :</h2>";
+                var row = "" ; 
+                    data.forEach(function(vehicule)
+                    {
+                        row += "<tr>";
+                        row += "<td>" + vehicule.id + "</td>";
+                        row += "<td>" + vehicule.plaque + "</td>";
+                        row += "<td>" + vehicule.date + "</td>";
+                        row += "<tr>" ; 
+                    });
+                $("#listeVehicules").html(row);
+                $("#titre").html(head) ; 
+            },
+        });
+    </script>
+</body>
+</html>

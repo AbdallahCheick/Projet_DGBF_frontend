@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Récupération de Données en AJAX</title>
+</head>
+<body>
+    <h1>Liste des Données</h1>
+    <table id="data-table" border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Plaque</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody id="tableau"></tbody>
+    </table>
+    <a href="index.html">Enregistrement</a>
+    <a href="liste_groupe.html">Liste groupe</a>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            $.ajax({
+                type:"GET",
+                url:"../back/liste_globale.php",
+                dataType: "json",
+                success:function(data)
+                {
+                    data.forEach(function(vehicule)
+                    {
+                        var row = "<tr>";
+                        row += "<td>" + vehicule.id + "</td>";
+                        row += "<td>" + vehicule.plaque + "</td>";
+                        row += "<td>" + vehicule.date + "</td>";
+                        row += "<tr>" ; 
+                        $("#tableau").append(row) ; 
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

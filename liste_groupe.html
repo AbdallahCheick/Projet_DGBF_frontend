@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Affichage de tous les véhicules par jour et heure</title>
+</head>
+<body>
+    <h1>Liste de tous les véhicules enregistrés par jour et heure</h1>
+    <h2>Résultats :</h2><a href="affichage_liste_globale.html">Retour</a> <br> <a href="liste_groupe.php">Résumé</a>
+    <table border="">
+        <tbody id="resultats"></tbody>
+    </table>
+
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                type: "GET",
+                url: "../back/liste_group.php",
+                dataType: "json",
+                success: function(data) {
+                    // Manipulez les données ici et affichez-les dans #resultats
+                    var resultatsHtml = "";
+                    resultatsHtml += "<tr><td>Date</td><td>Heure</td><td>Nombre de vehicule</td><td>Detail</td></tr> " ;
+                    data.forEach(function(valeur) {
+                        resultatsHtml += "<tr><td>"+ valeur.date_fr + "</td><td>" + valeur.heure + "</td><td>"+valeur.nombre_vehicules+
+                            "</td><td><a href='details_vehicules.html?date=" +valeur.date_fr + "&heure=" + valeur.heure + "'>Détail</a></td></tr>";
+                    });
+                    $("#resultats").html(resultatsHtml);
+                },
+                error: function(xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
