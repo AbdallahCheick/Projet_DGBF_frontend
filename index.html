@@ -31,7 +31,7 @@
     <div class="formulaire">
         <form id="enregistrementForm"> <!-- Ajoutez un ID au formulaire -->
             <label for="plaque">Plaque d'immatriculation :</label>
-            <input type="text" name="plaque" id="plaque" required maxlength="8" minlength="8" pattern="[0-9]{4}[A-Za-z]{2}[0-9]{2}" title="Le format attendu est 1234AB12 en respectant la casse.">
+            <input type="text" name="plaque" id="plaque" maxlength="8" minlength="8" pattern="[0-9]{4}[A-Za-z]{2}[0-9]{2}" title="Le format attendu est 1234AB12 en respectant la casse." required>
             <br><br>
         </form>
         <button onclick="traitement()">Enregistrer</button>
@@ -46,16 +46,20 @@
         $.ajax({
             type: "POST",
             url: "../back/enregistrement.php",
-            dataType: "json",
-            data: {
+            dataType: "text",
+            data: JSON.stringify({
                 plaque: plaque,
                 enregistrer: true
-            },
+            }),
+            contentType: "application/json",
             success: function(data) {
                 $("#plaque").val('');
                 alert("Véhicule enregistré");
-
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                alert("Erreur lors de l'enregistrement du véhicule");
             }
+            
         });
     }
 </script>
