@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>Recherche de véhicules</h1>
-    <form action="../back/recherche.php" method="POST">
+    <form >
         <label for="date_debut">Date et Heure de début :</label>
         <input type="datetime-local" name="date_heure_debut" id="date_heure_debut">
         
@@ -18,9 +18,10 @@
         <input type="text" name="plaque" id="plaque" placeholder="Entrer la plaque" maxlength="8" minlength="8">
         
         <!-- Utilisez le gestionnaire d'événements onclick pour appeler la fonction traitement() -->
-        <input type="button" value="Rechercher" name="rechercher" onclick="traitement()">
+        
         <input type="reset" value="Effacer"><br> <br><br>
     </form>
+    <button  id="rechercher" name="rechercher" onclick="recherche()">Rechercher</button>
     <table border="1">
         <thead>
             <tr>
@@ -34,9 +35,7 @@
 </body>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    function traitement() {
-    // Empêchez la soumission automatique du formulaire
-    event.preventDefault();
+function recherche() {
 
     // Récupérez les données du formulaire
     var date_heure_debut = $("#date_heure_debut").val();
@@ -44,17 +43,11 @@
     var plaque = $("#plaque").val();
 
     $.ajax({
-        type: "POST",
-        url: "../back/recherche.php",
+        type: "GET",
+        url: "../back/recherche.php?date_heure_debut="+ date_heure_debut+"&date_heure_fin="+ date_heure_fin+"&plaque="+plaque,
         dataType: "json",
-        data: {
-            date_heure_debut: date_heure_debut,
-            date_heure_fin: date_heure_fin,
-            plaque: plaque,
-            rechercher: true // Ajoutez cette clé pour indiquer que vous effectuez une recherche
-        },
         success: function(data) {
-            $("#tableau").empty(); // Effacez le contenu précédent
+            $("#tableau").empty(); 
             data.forEach(function(vehicule) {
                 var row = "<tr>";
                 row += "<td>" + vehicule.id + "</td>";
@@ -65,7 +58,7 @@
             });
         },
         error: function(xhr, status, error) {
-            console.error(xhr.responseText); // Affichez les erreurs dans la console
+           alert(status + ": " + xhr.responseText); 
         }
     });
 }
