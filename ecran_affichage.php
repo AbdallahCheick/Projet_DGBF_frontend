@@ -7,8 +7,8 @@
 </head>
 <body>
     <h1>Liste de tous les véhicules enregistrés par jour et heure</h1>
-    <h2>Résultats :</h2><a href="affichage_liste_globale.html">Retour</a> <br>
-    <table border="">
+    <h2>Résultats :</h2><a href="affichage_liste_globale.php">Retour</a> <br> <a href="liste_groupe.php">Résumé</a>
+    <table>
         <tbody id="resultats"></tbody>
     </table>
 
@@ -17,18 +17,24 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
+            var serveur = "<?php echo (getenv('HOST'));?>" ;
             $.ajax({
                 type: "GET",
-                url: "../back/liste_group.php",
+                url: "http://"+serveur+"/liste_trie.php",
                 dataType: "json",
                 success: function(data) {
                     // Manipulez les données ici et affichez-les dans #resultats
                     var resultatsHtml = "";
-                    resultatsHtml += "<tr><td>Date</td><td>Heure</td><td>Nombre de vehicule</td><td>Detail</td></tr> " ;
+
                     data.forEach(function(valeur) {
-                        resultatsHtml += "<tr><td>"+ valeur.date_fr + "</td><td>" + valeur.heure + "</td><td>"+valeur.nombre_vehicules+
-                            "</td><td><a href='details_vehicules.html?date=" +valeur.date_fr + "&heure=" + valeur.heure + "'>Détail</a></td></tr>";
+                        resultatsHtml += "<tr><td colspan=\"2\">Date: " + valeur.date_fr + ", Heure: " + valeur.heure + "</td></tr>";
+                        resultatsHtml += "<tr><td>Id</td><td>Plaque</td></tr>";
+                        valeur.vehicules.forEach(function(vehicule) {
+                            resultatsHtml += "<tr><td>" + vehicule.id + "</td><td>" + vehicule.plaque + "</td></tr>";
+                        });
+                        resultatsHtml += "<tr><td colspan=\"2\">Nombre de véhicules: " + valeur.nombre_vehicules + "</td></tr>";
                     });
+
                     $("#resultats").html(resultatsHtml);
                 },
                 error: function(xhr, status, error) {
